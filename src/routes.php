@@ -75,7 +75,7 @@ $app->post('/get/pic', function (){
 
     $resultado = $conexion->query($consulta);
     $arreglo = $resultado->fetch_assoc();
-    $consulta = "INSERT INTO Twin VALUES ('".$pic['dbId']."',   '".$arreglo['id']."')";
+    $consulta = "INSERT INTO Twin (idLocal,idRemota) VALUES ('".$pic['dbId']."', '".$arreglo['id']."')";
     $conexion->query($consulta);
     mysqli_close(conexion);
     $json = json_encode($arreglo);
