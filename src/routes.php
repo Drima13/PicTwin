@@ -58,21 +58,25 @@ $app->post('/insert/pic',function(){
 });
 
 $app->post('/get/pic', function (){
-
+    $json = file_get_contents('php://input');
+    $pic = json_decode($json,true);
     $conexion = mysqli_connect('localhost', 'root', '', 'pictwin');
       $consulta = " SELECT Pic.*
                     FROM Twin, Pic
-                    WHERE Twin.remote_pic_id = Pic.id
+                    WHERE Twin.idRemota = Pic.id
                     GROUP BY Pic.id
                     HAVING count(Pic.id) = (
                     SELECT count(Pic.id) AS count
                     FROM Twin, Pic
-                    WHERE Twin.remote_pic_id = Pic.id
+                    WHERE Twin.idRemota = Pic.id
                     GROUP BY Pic.id
                     ORDER BY count
                     LIMIT 1)";
+
     $resultado = $conexion->query($consulta);
     $arreglo = $resultado->fetch_assoc();
+    $consulta = "INSERT INTO Twin VALUES ('".$pic['dbId']."',.'".$arreglo['id']."')";
+    $conexion->query($consulta);
     mysqli_close(conexion);
     $json = json_encode($arreglo);
     return $json;
