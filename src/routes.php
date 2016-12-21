@@ -43,10 +43,17 @@ $app->post('/insert/pic',function(){
 
     $consulta = "INSERT INTO Pic (deviceId,date,latitud,longitud,positivo,negativo,warning,pic) VALUES  
                   ('".$pic['deviceId']."','".$pic['date']."','".$pic['latitud']."','".$pic['longitud']."',
-                  0,0,0,1,'".$pic['pic']."')";
+                  0,0,0,'".$pic['pic']."')";
 
     $conexion->query($consulta);
-    mysqli_close($conexion);
+
+    $consulta = "SELECT id FROM Pic WHERE pic = '".$pic['pic']."'";
+    $resultado =$conexion->query($consulta);
+    $arreglo = $resultado->fetch_assoc();
+    mysqli_close(conexion);
+    $json = json_encode($arreglo);
+    return $json;
+
 
 });
 
